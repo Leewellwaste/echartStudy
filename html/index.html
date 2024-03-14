@@ -1,0 +1,56 @@
+<!--
+ * @Author: Leewellwaste zzzz_justice@qq.com
+ * @Date: 2024-03-14 14:00:02
+ * @LastEditors: Leewellwaste zzzz_justice@qq.com
+ * @LastEditTime: 2024-03-14 16:41:42
+ * @FilePath: \echartStudy\html\index.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据可视化</title>
+    <link rel="stylesheet" href="../css/index.css">
+
+    <!-- 1.引入echart.min.js -->
+    <!-- <script src="../font/echarts.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
+</head>
+<body>
+    <!-- 2.准备一个盒子 -->
+    <div class="box">
+    <!-- 3.初始化echarts实例 -->
+    <!-- 参数,dom,决定图的位置 -->
+    <script>
+         var mCharts = echarts.init(document.querySelector('div'))
+
+        //  4.准备配置项
+        var option = {
+            xAxis:{
+                type:'category', //类目轴x
+                data:['小明','小红','小王']
+            },
+            yAxis:{
+                type:'value' //数值轴y
+            },
+            series:[        //配置给y轴的数据
+                {
+                    name:'语文',
+                    type:'bar',  //柱状类型 line线状 pie圆形图
+                    data:[70,92,87]
+                }
+            ]
+        }
+
+        // 5.将配置项设置给echarts实例
+        mCharts.setOption(option)
+
+    </script>
+    </div>
+
+   
+    
+</body>
+</html>
