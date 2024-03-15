@@ -9,12 +9,12 @@
 </head>
 <body>
     <!-- 2.初始化盒子 -->
-    <div id="chart" style="width: 800px; height: 600px;"></div>
+    <div id="chart" style="width: 400px; height: 300px;"></div>
 
     <script>
 
         // 3.调用接口,初始化实例
-        fetch('http://127.0.0.1:8080/data')
+        fetch('http://127.0.0.1:8080/weldDay?unitCode=马来西亚项目')
             .then(response => response.json())
             .then(data => {
                 const xAxisData = data.map(item => item.x);
@@ -35,7 +35,12 @@
                     },
                     series: [{
                         data: seriesData,
-                        type: 'line'
+                        type: 'line',
+                        // 配置标签
+                        label: { 
+                            show: true, // 显示标签
+                            position: 'top' // 标签位置
+                        }
                     }]
                 };
                 //5. 配置项设置给实例
