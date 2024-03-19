@@ -1,148 +1,107 @@
-<!--
- * @Author: Leewellwaste zzzz_justice@qq.com
- * @Date: 2024-03-14 16:30:26
- * @LastEditors: Leewellwaste zzzz_justice@qq.com
- * @LastEditTime: 2024-03-18 16:30:26
- * @FilePath: \echartStudy\work\mlxy\html\mlxy.html
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECharts 折线图</title>
-    <!-- 1.引入 ECharts -->
+    <title>EChartsMlxy</title>
+    <!-- 引入 ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
     <link rel="stylesheet" href="../css/mlxy.css">
 </head>
 <body>
     <div class="box">
-    <!-- 2.初始化盒子 -->
-    <div id="weldDay" style="width: 400px; height: 300px;"></div>
-    <!-- <div id="weldMonth" style="width: 400px; height: 300px;"></div> -->
-    <div id="materialsArrive" style="width: 400px; height: 300px;"></div>
-    <div id="dataClocking" style="width: 400px; height: 300px;"></div>
-</div>
+        <div class="boxLine">
+            <!-- 初始化盒子 -->
+            <div id="weldDay" style="width: 400px; height: 300px;"></div>
+            <div id="weldMonth" style="width: 400px; height: 300px;"></div>
+        </div>
+        <div class="boxbar">
+            <div id="materialsArrive" style="width: 400px; height: 300px;"></div>
+        </div>
+        <div class="boxtext">
+            <div id="dataClocking" style="width: 500px; height: 300px;"></div>
+            <div id="dataAuto" style="width: 500px; height: 300px;"></div>
+            <div id="dataSummary" style="width: 500px; height: 300px;"></div>
+            <div id="dataDay" style="width: 500px; height: 300px;"></div>
+        </div>
+    </div>
 
-
-
-        <!-- //马来西亚项目日度焊接 -->
     <script>
-        function upDate() {
-            fetch('http://127.0.0.1:8080/weldDay?unitCode=马来西亚项目')
+        // 函数封装
+        function fetchData(url, id, chartType, chartTitle) {
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     const xAxisData = data.map(item => item.content);
                     const seriesData = data.map(item => item.value);
 
-                    // 获取图表实例
-                    var chart = echarts.init(document.getElementById('weldDay'));
-                    // 配置项
-                    var option = {
-                        title: {
-                            text: '马来西亚项目日度焊接图'
-                        },
-                        xAxis: {
-                            type: 'category',
-                            data: xAxisData
-                        },
-                        yAxis: {
-                            type: 'value'
-                        },
-                        series: [{
-                            data: seriesData,
-                            type: 'line',
-                            // 配置标签
-                            label: { 
-                                show: true, // 显示标签
-                                position: 'top' // 标签位置
-                            }
-                        }]
-                    };
-                    // 配置项设置给实例
-                    chart.setOption(option);
+                    renderChart(id, chartType, chartTitle, xAxisData, seriesData);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
         }
-        upDate();
 
-        // 每隔1小时更新一次
-        setInterval(upDate, 1 * 60 * 60 * 1000);
+        function renderChart(id, chartType, chartTitle, xAxisData, seriesData) {
+            var mChart = echarts.init(document.getElementById(id), 'light');
+            var option = {
+                title: {
+                    text: chartTitle
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: seriesData,
+                    type: chartType,
+                    label: { 
+                        show: true, 
+                        position: 'top' 
+                    }
+                }]
+            };
+            mChart.setOption(option);
+        }
+
+        // 定义数据更新函数
+        function updateData() {
+            // 马来西亚 日度焊接图
+            fetchData('http://127.0.0.1:8080/weldDay?unitCode=马来西亚项目', 'weldDay', 'line', '马来西亚项目日度焊接图');
+            // 马来西亚 月度焊接图
+            fetchData('http://127.0.0.1:8081/weldMonth?unitCode=马来西亚项目', 'weldMonth', 'line', '马来西亚项目月度焊接图');
+            // 马来西亚 材料到货信息
+            fetchData('http://127.0.0.1:8080/materialsArrive?project_id=42', 'materialsArrive', 'bar', '马来西亚项目材料到货信息');
+            // 马来西亚 考勤数据
+            fetchDataAndRenderText('http://127.0.0.1:8081/dataClocking', 'dataClocking', '考勤信息');
+            // 马来西亚 自动焊数据一栏
+            fetchDataAndRenderText('http://127.0.0.1:8081/dataAuto?unitCode=马来西亚项目', 'dataAuto', '马来西亚自动焊数据一览');
+             // 马来西亚 自动焊数据一栏
+             fetchDataAndRenderText('http://127.0.0.1:8081/dataSummary?unitCode=马来西亚项目', 'dataSummary', '马来西项目数据汇总');
+              // 马来西亚 自动焊数据一栏
+            fetchDataAndRenderText('http://127.0.0.1:8080/dataDay?unitCode=马来西亚项目', 'dataDay', '马来西亚项目每日数据');
+        }
+
+        function fetchDataAndRenderText(url, id, title) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const text = data.map(item => `${item.content}: ${item.value}`).join('<br>');
+                    document.getElementById(id).innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        // 初始化数据
+        updateData();
+
+        // 每隔一定时间重新获取数据并更新
+        setInterval(updateData, 1 * 60 * 60 * 1000);
     </script>
-
-<!-- // 材料到货 -->
-<script>
-    function upDate() {
-        fetch('http://127.0.0.1:8080/materialsArrive?project_id=42')
-            .then(response => response.json())
-            .then(data => {
-                const xAxisData = data.map(item => item.content);
-                const seriesData = data.map(item => item.value);
-
-                // 获取图表实例
-                var chart = echarts.init(document.getElementById('materialsArrive'));
-                // 配置项
-                var option = {
-                    title: {
-                        text: '马来西亚项目材料到货信息'
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: xAxisData
-                    },
-                    yAxis: {
-                        type: 'value'
-                    },
-                    series: [{
-                        data: seriesData,
-                        type: 'bar',
-                        
-                        label: { 
-                            show: true, // 显示标签
-                            position: 'top' // 标签位置
-                        }
-                    }]
-                };
-                // 配置项设置给实例
-                chart.setOption(option);
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    }
-    upDate();
-
-    // 1小时更新一次
-    setInterval(upDate, 1 * 60 * 60 * 1000);
-</script>
-
-<!-- 考勤 -->
-<script class="text">
-    function upDate() {
-        fetch('http://127.0.0.1:8081/dataClocking')
-        .then(response => response.json())
-        .then(data => {
-            const text = data.map(item => item.content).join('<br>'); // 将所有文本拼接成一个字符串，并使用<br>换行
-            
-            // 将文本显示在页面中
-            document.getElementById('dataClocking').innerHTML = text;
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-    }
-
-    upDate();
-
-    // 每隔一定时间重新获取数据并更新文本
-    setInterval(upDate, 1 * 60 * 60 * 1000);
-</script>
-
-
-
-
 </body>
 </html>

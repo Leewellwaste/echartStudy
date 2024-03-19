@@ -1,10 +1,17 @@
+/* 
 .box{
+    display:flex
+} */
+
+.boxLine{
     display: flex;
     padding-top:30px;
-    margin: auto;
 }
 
+.boxbar{
+    display: flex;
+}
 
-.box .text{
-
+.boxtext{
+    display: flex;
 }
