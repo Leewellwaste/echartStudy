@@ -1,0 +1,57 @@
+<!--
+ * @Author: leewell zzzz_justice@qq.com
+ * @Date: 2024-03-18 22:32:06
+ * @LastEditors: leewell zzzz_justice@qq.com
+ * @LastEditTime: 2024-03-18 23:50:22
+ * @FilePath: /前端学习/echartStudy/html/04.折线图.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>折线图</title>
+    <!-- 1.引入echarts -->
+    <script src="../lib/echarts.min.js"></script>
+    <!-- 2.引入css文件 -->
+    <link rel="stylesheet" href="../css/index.css">
+    
+</head>
+<body>
+    <!-- 3.引入盒子 dom容器 -->
+    <div class="box"></div>
+    
+<script>
+    //  4.初始化实例 并加入盒子 
+    var mCharts = echarts.init(document.querySelector('.box'))
+    var xDataArr = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday']
+    var yDataArr = [12,14,88,98,34,100,198]
+    // 5.设置option配置项
+    var option = {
+        title:{
+            text:'dataTotle'
+        },
+        xAxis:{
+            type:'category',
+            data:xDataArr
+        },
+        yAxis:{
+            type:'value'
+
+        },
+        series:[
+            {
+                
+                name:'weldData',
+                type:'line',
+                data:yDataArr
+            }
+        ]
+
+    }
+    //6.配置项引入实例
+   mCharts.setOption(option)
+</script>
+</body>
+</html>
